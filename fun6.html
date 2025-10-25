@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>System Prank</title>
+<style>
+  body {
+    background-color: black;
+    color: red;
+    text-align: center;
+    font-size: 3em;
+    margin-top: 15%;
+    transition: background-color 0.2s;
+  }
+
+  #count {
+    font-size: 4em;
+    margin-bottom: 20px;
+  }
+
+  /* Deleting all data... 明滅アニメ */
+  #deleting {
+    opacity: 0;
+    animation: fade 1.5s infinite alternate;
+  }
+
+  @keyframes fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* 背景フラッシュ */
+  .flash {
+    animation: flash 0.2s infinite alternate;
+  }
+
+  @keyframes flash {
+    from { background-color: black; }
+    to { background-color: darkred; }
+  }
+
+  button {
+    font-size: 1em;
+    padding: 10px 20px;
+    background: red;
+    color: white;
+    border: none;
+    border-radius: 5px;
+  }
+</style>
+</head>
+<body>
+
+<h1>⚠ System Warning ⚠</h1>
+<button id="startBtn">Start</button>
+<h1 id="count"></h1>
+<div id="deleting"></div>
+
+<script>
+// 効果音の準備
+const alarm = new Audio("https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg");
+const success = new Audio("https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg");
+const horror = new Audio("https://actions.google.com/sounds/v1/ambiences/scary_background.ogg");
+const boom = new Audio("https://actions.google.com/sounds/v1/explosions/explosion.ogg");
+
+// iPhoneで音を鳴らす権限を取得
+document.getElementById("startBtn").addEventListener("click", () => {
+  alarm.play().then(() => alarm.pause());
+  success.play().then(() => success.pause());
+  horror.play().then(() => horror.pause());
+  boom.play().then(() => boom.pause());
+
+  document.getElementById("startBtn").style.display = "none";
+  document.querySelector("h1").style.display = "none";
+
+  let c = 3;
+  const countEl = document.getElementById("count");
+  const deletingEl = document.getElementById("deleting");
+  countEl.innerText = c;
+  deletingEl.innerText = "Deleting all data...";
+
+  // カウント中の怖いBGM再生
+  horror.loop = true;
+  horror.volume = 0.5;
+  horror.play();
+
+  // フラッシュ効果開始
+  document.body.classList.add("flash");
+
+  let timer = setInterval(() => {
+    c--;
+    countEl.innerText = c;
+
+    if (c === 0) {
+      clearInterval(timer);
+      horror.pause();
+      document.body.classList.remove("flash");
+
+      // 爆発音を再生
+      boom.play();
+
+      // 背景を真っ赤にして一瞬フラッシュ
+      document.body.style.backgroundColor = "darkred";
+      countEl.innerText = "";
+      deletingEl.style.animation = "none";
+      deletingEl.style.opacity = "1";
+      deletingEl.innerText = "Deleting all data...";
+      deletingEl.style.color = "red";
+
+      // 少しして完了メッセージ表示
+      setTimeout(() => {
+        document.body.style.backgroundColor = "black";
+        deletingEl.style.color = "lime";
+        deletingEl.innerText = "Data deletion complete.";
+        success.play();
+      }, 4000);
+    }
+  }, 1000);
+});
+</script>
+
+</body>
+</html>
