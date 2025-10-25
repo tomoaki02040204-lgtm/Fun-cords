@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>System Prank</title>
+<style>
+  body {
+    background-color: black;
+    color: red;
+    text-align: center;
+    font-size: 3em;
+    margin-top: 15%;
+  }
+
+  /* カウント数字 */
+  #count {
+    font-size: 4em;
+    margin-bottom: 20px;
+  }
+
+  /* フェードイン・アウト（Deleting all data...） */
+  #deleting {
+    opacity: 0;
+    animation: fade 1.5s infinite alternate;
+  }
+
+  @keyframes fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  /* スタートボタン */
+  button {
+    font-size: 1em;
+    padding: 10px 20px;
+    background: red;
+    color: white;
+    border: none;
+    border-radius: 5px;
+  }
+</style>
+</head>
+<body>
+
+<h1>⚠ System Warning ⚠</h1>
+<button id="startBtn">Start</button>
+<h1 id="count"></h1>
+<div id="deleting"></div>
+
+<script>
+let alarm = new Audio("https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg");
+let success = new Audio("https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg");
+
+// iPhoneで音を鳴らす許可を取得
+document.getElementById("startBtn").addEventListener("click", () => {
+  alarm.play().then(() => alarm.pause());
+  success.play().then(() => success.pause());
+
+  document.getElementById("startBtn").style.display = "none";
+  document.querySelector("h1").style.display = "none";
+
+  let c = 3;
+  const countEl = document.getElementById("count");
+  const deletingEl = document.getElementById("deleting");
+  countEl.innerText = c;
+  deletingEl.innerText = "Deleting all data...";
+
+  let timer = setInterval(() => {
+    c--;
+    countEl.innerText = c;
+
+    if (c === 0) {
+      clearInterval(timer);
+      alarm.play();
+
+      // 文字を固定表示＆緑色に変更
+      deletingEl.style.animation = "none";
+      deletingEl.style.opacity = "1";
+      deletingEl.style.color = "lime";
+      deletingEl.innerText = "Data deletion complete.";
+      countEl.innerText = "";
+
+      // 成功音再生
+      success.play();
+    }
+  }, 1000);
+});
+</script>
+
+</body>
+</html>
