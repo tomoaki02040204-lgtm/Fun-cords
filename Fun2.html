@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<body style="background-color:black; color:red; text-align:center; font-size:3em;">
+<h1 id="count">7</h1>
+
+<script>
+let c = 7;
+let timer = setInterval(() => {
+  c--;
+  document.getElementById("count").innerText = c;
+
+  if (c === 0) {
+    clearInterval(timer);
+    document.body.innerHTML = "<h1>Deleting all data...</h1>";
+    
+    // 警告音を鳴らす
+    const sound = new Audio("https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg");
+    sound.play();
+
+    // 数秒後に「データ消去成功」と表示
+    setTimeout(() => {
+      document.body.innerHTML = "<h1 style='color:lime;'>Data deletion complete.</h1>";
+      const successSound = new Audio("https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg");
+      successSound.play();
+    }, 4000); // 4秒後にメッセージ変更
+  }
+}, 1000);
+</script>
+
+</body>
+</html>
