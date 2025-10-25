@@ -1,30 +1,75 @@
 <!DOCTYPE html>
 <html>
-<body style="background-color:black; color:red; text-align:center; font-size:3em;">
-<h1 id="count">7</h1>
+<head>
+<meta charset="UTF-8">
+<title>System Warning</title>
+<style>
+  body {
+    background-color: black;
+    color: red;
+    text-align: center;
+    font-size: 3em;
+    margin-top: 20%;
+    transition: background-color 0.2s;
+  }
+  .flash {
+    animation: flash 0.5s infinite alternate;
+  }
+  @keyframes flash {
+    from { color: red; background-color: black; }
+    to { color: black; background-color: red; }
+  }
+  button {
+    font-size: 1em;
+    padding: 10px 20px;
+    background: red;
+    color: white;
+    border: none;
+    border-radius: 5px;
+  }
+</style>
+</head>
+<body>
+
+<h1>⚠ System Warning ⚠</h1>
+<button id="startBtn">Start</button>
+<h1 id="count"></h1>
 
 <script>
-let c = 7;
-let timer = setInterval(() => {
-  c--;
-  document.getElementById("count").innerText = c;
+let alarm = new Audio("https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg");
+let success = new Audio("https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg");
 
-  if (c === 0) {
-    clearInterval(timer);
-    document.body.innerHTML = "<h1>Deleting all data...</h1>";
-    
-    // 警告音を鳴らす
-    const sound = new Audio("https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg");
-    sound.play();
+// ✅ iPhoneで音を鳴らすために、ユーザー操作時に音を“解禁”しておく
+document.getElementById("startBtn").addEventListener("click", () => {
+  // 無音の瞬間再生で音再生権を取得
+  alarm.play().then(() => alarm.pause());
+  success.play().then(() => success.pause());
 
-    // 数秒後に「データ消去成功」と表示
-    setTimeout(() => {
-      document.body.innerHTML = "<h1 style='color:lime;'>Data deletion complete.</h1>";
-      const successSound = new Audio("https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg");
-      successSound.play();
-    }, 4000); // 4秒後にメッセージ変更
-  }
-}, 1000);
+  document.getElementById("startBtn").style.display = "none";
+  document.querySelector("h1").style.display = "none";
+
+  let c = 7;
+  const countEl = document.getElementById("count");
+  countEl.innerText = c;
+
+  let timer = setInterval(() => {
+    c--;
+    countEl.innerText = c;
+    document.body.classList.toggle("flash");
+
+    if (c === 0) {
+      clearInterval(timer);
+      document.body.classList.remove("flash");
+      document.body.innerHTML = "<h1>Deleting all data...</h1>";
+      alarm.play(); // ✅ これでiPhoneでも鳴る
+
+      setTimeout(() => {
+        document.body.innerHTML = "<h1 style='color:lime;'>Data deletion complete.</h1>";
+        success.play();
+      }, 4000);
+    }
+  }, 1000);
+});
 </script>
 
 </body>
