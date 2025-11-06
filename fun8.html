@@ -26,7 +26,6 @@
     margin-top: 20px;
   }
 
-  /* 赤青フラッシュ */
   .flash-redblue {
     animation: redblue 0.2s infinite alternate;
   }
@@ -36,7 +35,6 @@
     to { background-color: darkblue; }
   }
 
-  /* Deleting all data... 明滅 */
   #deleting {
     opacity: 0;
     animation: fade 1.2s infinite alternate;
@@ -79,14 +77,12 @@
 <script>
 // ======== 音源設定 ========
 const siren = new Audio("https://actions.google.com/sounds/v1/emergency/police_siren.ogg");
-const beep = new Audio("https://actions.google.com/sounds/v1/alarms/beep_short.ogg");
 const alarm = new Audio("https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg");
 const complete = new Audio("https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg");
 
-// ======== イベント開始 ========
 document.getElementById("startBtn").addEventListener("click", () => {
-  // iPhone用 音の初期再生権限確保
-  [siren, beep, alarm, complete].forEach(a => a.play().then(()=>a.pause()));
+  // iPhone対応：事前再生で音声許可を取得
+  [siren, alarm, complete].forEach(a => a.play().then(()=>a.pause()));
 
   const btn = document.getElementById("startBtn");
   const title = document.querySelector("h1");
@@ -109,22 +105,18 @@ document.getElementById("startBtn").addEventListener("click", () => {
     c--;
     countEl.innerText = c;
 
-    // ビープ音 + アラーム音を同時再生
-    beep.currentTime = 0;
+    // 各カウント時にアラーム音を鳴らす（ループなし）
     alarm.currentTime = 0;
-    beep.play();
     alarm.play();
 
     if (c === 0) {
       clearInterval(timer);
-      alarm.pause(); // カウント終了時にアラーム停止
 
-      // サイレン開始
+      // ======== サイレン開始 ========
       siren.loop = true;
-      siren.volume = 0.8;
+      siren.volume = 0.9;
       siren.play();
 
-      document.body.classList.add("flash-redblue");
       deletingEl.innerText = "⚠ CRITICAL ERROR ⚠";
       deletingEl.style.animation = "none";
       deletingEl.style.opacity = "1";
@@ -140,7 +132,7 @@ document.getElementById("startBtn").addEventListener("click", () => {
         scareImg.style.display = "none";
         document.body.style.backgroundColor = "black";
         deletingEl.style.color = "lime";
-        deletingEl.innerText = "✔ SYSTEM STABILIZED ✔";
+        deletingEl.innerText = "✔ INITIALIZATION COMPLETE ✔";
         statusEl.innerText = "";
         complete.play();
       }, 5000);
