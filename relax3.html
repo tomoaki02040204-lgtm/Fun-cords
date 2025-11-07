@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>反射神経テスト 3チャレンジ</title>
+<style>
+  body {
+    margin: 0;
+    background: #111;
+    color: #fff;
+    font-family: "Helvetica Neue", sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  #circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: red;
+    position: absolute;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  #message {
+    font-size: 22px;
+    margin-bottom: 30px;
+    text-align: center;
+  }
+
+  #retry {
+    margin-top: 30px;
+    background: #06C755;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    font-size: 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: none;
+  }
+
+  #retry:hover {
+    opacity: 0.8;
+  }
+
+  #scoreboard {
+    margin-top: 20px;
+    font-size: 18px;
+    opacity: 0.8;
+  }
+</style>
+</head>
+<body>
+
+<div id="message">画面をタップしてスタート！</div>
+<div id="circle"></div>
+<button id="retry">もう一度</button>
+<div id="scoreboard"></div>
+
+<script>
+  const circle = document.getElementById('circle');
+  const message = document.getElementById('message');
+  const retry = document.getElementById('retry');
+  const scoreboard = document.getElementById('scoreboard');
+
+  let startTime, timeoutId, waiting = false;
+  let trialCount = 0;
+  let results = [];
+
+  function startGame() {
+    trialCount = 0;
+    results = [];
+    scoreboard.textContent = "";
+    message.textContent = "赤い丸が出たらすぐタップ！";
+    retry.style.display = "none";
+    nextRound();
+  }
+
+  function nextRound() {
+    waiting = true;
+    circle.style.opacity = 0;
+    const delay = Math.random() * 3000 + 1000;
+
+    timeoutId = setTimeout(() => {
+      circle.style.opacity = 1;
+      startTime = Date.now();
+    }, delay);
+  }
+
+  function handleTap() {
+    if (!waiting) {
+      startGame();
+      return;
+    }
+
+    // 丸が出る前にタップ
+    if (circle.style.opacity == 0) {
+      clearTimeout(timeoutId);
+      message.textContent = "早すぎ！😅 赤い丸が出てから！";
+      retry.style.display = "block";
+      waiting = false;
+      return;
+    }
+
+    // 正常タップ
+    const reaction = Date.now() - startTime;
+    results.push(reaction);
+    trialCount++;
+    circle.style.opacity = 0;
+    waiting = false;
+
+    if (trialCount < 3) {
+      message.textContent = `第${trialCount}回：${reaction} ms ⚡\n次のラウンドへ...`;
+      setTimeout(nextRound, 1500);
+    } else {
+      const best = Math.min(...results);
+      message.textContent = `結果発表🎉\n最速：${best} ms！`;
+      scoreboard.textContent = `記録一覧 → ${results.join(" / ")} ms`;
+      retry.style.display = "block";
+    }
+  }
+
+  document.body.addEventListener('click', handleTap);
+  retry.addEventListener('click', startGame);
+</script>
+
+</body>
+</html>
