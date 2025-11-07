@@ -120,14 +120,14 @@
   // 通知表示
   setTimeout(() => {
     notif.classList.add('show');
-  }, 2000);
+  }, 1000);
 
   // 通知消して診断表示
   setTimeout(() => {
     notif.classList.remove('show');
     answer.textContent = results[Math.floor(Math.random() * results.length)];
     result.style.display = "block";
-  }, 4000);
+  }, 6000);
 </script>
 
 </body>
