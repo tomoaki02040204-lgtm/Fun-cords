@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LINE通知風診断</title>
+<style>
+  body {
+    margin: 0;
+    background: #111;
+    font-family: "Helvetica Neue", sans-serif;
+    color: white;
+    overflow: hidden;
+  }
+
+  /* 通知風バナー */
+  .notification {
+    position: fixed;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(30,30,30,0.95);
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    padding: 15px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+    opacity: 0;
+    transition: all 0.8s ease;
+    display: flex;
+    align-items: center;
+  }
+
+  .notification.show {
+    top: 30px;
+    opacity: 1;
+  }
+
+  .icon {
+    background: #06C755;
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    margin-right: 12px;
+    font-size: 20px;
+  }
+
+  .text {
+    flex: 1;
+  }
+
+  .sender {
+    font-weight: bold;
+  }
+
+  .message {
+    font-size: 14px;
+    opacity: 0.8;
+  }
+
+  /* 診断画面 */
+  .result {
+    display: none;
+    text-align: center;
+    margin-top: 150px;
+    animation: fadein 1s ease;
+  }
+
+  @keyframes fadein {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .title {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+
+  .answer {
+    font-size: 26px;
+    font-weight: bold;
+    color: #06C755;
+  }
+</style>
+</head>
+<body>
+
+<div class="notification" id="notif">
+  <div class="icon">L</div>
+  <div class="text">
+    <div class="sender">LINE診断Bot</div>
+    <div class="message">診断結果が届いています</div>
+  </div>
+</div>
+
+<div class="result" id="result">
+  <div class="title">あなたの「今日の性格タイプ」は...</div>
+  <div class="answer" id="answer"></div>
+</div>
+
+<script>
+  // ランダム診断結果
+  const results = [
+    "カリスマリーダータイプ🔥",
+    "天才マイペースタイプ🧠",
+    "優しすぎる天使タイプ😇",
+    "努力家ストイックタイプ💪",
+    "天然癒し系タイプ🌸",
+    "自由すぎる冒険家タイプ🌍"
+  ];
+
+  const notif = document.getElementById('notif');
+  const result = document.getElementById('result');
+  const answer = document.getElementById('answer');
+
+  // 通知表示
+  setTimeout(() => {
+    notif.classList.add('show');
+  }, 1000);
+
+  // 通知消して診断表示
+  setTimeout(() => {
+    notif.classList.remove('show');
+    answer.textContent = results[Math.floor(Math.random() * results.length)];
+    result.style.display = "block";
+  }, 4000);
+</script>
+
+</body>
+</html>
