@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>おみくじ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      background: linear-gradient(#fff8e7, #ffdca8);
+      font-family: "Hiragino Mincho ProN", serif;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      font-size: 2.2em;
+      color: #b30000;
+    }
+
+    button {
+      font-size: 1.2em;
+      padding: 15px 30px;
+      background-color: #d60000;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 30px;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    #result {
+      margin-top: 40px;
+      padding: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      display: none;
+    }
+
+    .fortune {
+      font-size: 2em;
+      color: #b30000;
+      margin-bottom: 10px;
+    }
+
+    .advice {
+      font-size: 1.1em;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🎍 新年おみくじ 🎍</h1>
+
+  <button onclick="drawOmikuji()">おみくじを引く</button>
+
+  <div id="result">
+    <div class="fortune" id="fortune"></div>
+    <div class="advice" id="advice"></div>
+  </div>
+
+  <script>
+    const omikuji = [
+      { fortune: "大吉", advice: "最高の運気です！思い切って行動しましょう。" },
+      { fortune: "中吉", advice: "良い流れです。周囲との協力がカギになります。" },
+      { fortune: "吉", advice: "安定した運勢。継続が力になります。" },
+      { fortune: "小吉", advice: "小さな幸せを大切にすると運気アップ。" },
+      { fortune: "末吉", advice: "後半に向けて運が開けます。焦らず進みましょう。" },
+      { fortune: "凶", advice: "慎重に行動を。準備を整える時期です。" },
+      { fortune: "大凶", advice: "無理は禁物。休息と見直しが幸運への近道です。" }
+    ];
+
+    function drawOmikuji() {
+      const random = Math.floor(Math.random() * omikuji.length);
+      document.getElementById("fortune").textContent = omikuji[random].fortune;
+      document.getElementById("advice").textContent = omikuji[random].advice;
+      document.getElementById("result").style.display = "block";
+    }
+  </script>
+
+</body>
+</html>
